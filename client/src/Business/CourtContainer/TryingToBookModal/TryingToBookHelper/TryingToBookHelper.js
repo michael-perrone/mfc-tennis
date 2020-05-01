@@ -6,85 +6,33 @@ import OtherAlert from "../../../../OtherAlerts/OtherAlerts";
 import { connect } from "react-redux";
 
 const TryingToBookHelper = props => {
-  const [customerName, setCustomerName] = React.useState("");
-  const [customers, setCustomers] = React.useState([]);
+  const [playerName, setPlayerName] = React.useState("");
+  const [players, setPlayers] = React.useState([props.user.user.fullName]);
   const [addedPlayers, setAddedPlayers] = React.useState(
     props.user
       ? [{ name: props.user.user.userName, id: props.user.user.id }]
       : []
   );
-  const [searchHit, setSearchHit] = React.useState(false);
-  const [tooSmallError, setTooSmallError] = React.useState(false);
   const [addError, setAddError] = React.useState(false);
 
-  function findCustomers(event) {
+  function addPlayer(event) {
     event.preventDefault();
-    if (customerName.length > 2) {
-      setSearchHit(true);
-      let clubName = "";
-      if (props.admin) {
-        clubName = props.clubNameAllLower;
-      } else {
-        clubName = props.match.params.clubName;
-      }
-      axios
-        .post("/api/getCustomers", {
-          customerName,
-          clubNameAllLower: clubName
-        })
-        .then(response => {
-          if (response.data.customers.length > 0) {
-            setCustomers(response.data.customers);
-          }
-        })
-        .catch(error => {
-          if (error.response.status === 400) {
-            setCustomers([]);
-          }
-        });
-    } else {
-      setTooSmallError(true);
+    if (playerName !== "") {
+      let newPlayers = [...players, playerName];
+      setPlayers(newPlayers)
     }
   }
 
-  function addPlayer(player) {
-    return () => {
-      setAddError(false);
-      let allowAdd = true;
-      addedPlayers.forEach(addedPlayer => {
-        if (addedPlayer.id === player.id) {
-          allowAdd = false;
-        }
-      });
-      if (allowAdd) {
-        const newAddedPlayers = [...addedPlayers, player];
-        setAddedPlayers(newAddedPlayers);
-      } else {
-        setTimeout(() => setAddError(true), 100);
-      }
-    };
-  }
 
-  const getCustomerName = event => {
-    setCustomerName(event.target.value);
-    setSearchHit(false);
+  const getplayerName = event => {
+    setPlayerName(event.target.value);
   };
+
+  console.log(players.length)
 
   return (
     <div id={styles.mainHelper}>
-      {!props.finish && (
-        <button
-          onClick={props.setFinish(addedPlayers)}
-          style={{
-            position: "absolute",
-            right: "-3px",
-            top: "-27px",
-            width: "60px"
-          }}
-        >
-          Finish
-        </button>
-      )}
+     
       <div>
         <OtherAlert
           showAlert={addError === true}
@@ -92,59 +40,46 @@ const TryingToBookHelper = props => {
           alertMessage={"Player already added"}
         />
         <form>
-          <p
+          <p style={{marginLeft: '20px'}}
             id={
-              tooSmallError === true && customerName.length < 3
-                ? styles.errorAnimation
-                : ""
-            }
-            className={styles.error}
-          >
-            More than two letters required
-          </p>
-          <p
-            className={styles.error}
-            id={
-              searchHit === true &&
-              customerName.length > 2 &&
-              customers.length === 0
+             true
                 ? styles.errorAnimation
                 : ""
             }
           >
-            No Results Found
+            Add 1-3 Players and Proceed to Click Finish
           </p>
+       
           <input
-            style={{ marginTop: "10px" }}
-            onChange={getCustomerName}
+            style={{ marginTop: "10px", fontSize: '16px' }}
+            onChange={getplayerName}
             id={styles.helperInput}
           />
           <button
-            onClick={findCustomers}
-            style={{ marginLeft: "20px", height: "28px", width: "60px" }}
+            disabled={players.length === 4 || !playerName}  
+            onClick={addPlayer}
+            style={{ marginLeft: "20px", height: "28px", width: "60px", cursor: players.length === 4 || !playerName ? 'not-allowed' : "pointer" }}
           >
-            Search
+            Add
           </button>
         </form>
-        <div style={{ marginTop: "8px" }}>
-          {customers.map((customer, index) => {
-            if (index < 6) {
-              return (
-                <div className={styles.addCustomerContainer}>
-                  <p className={styles.customer}>{customer.name}</p>
-                  <p>Age: 42</p>
-                  <button
-                    className={styles.addButton}
-                    style={{ cursor: "pointer" }}
-                    onClick={addPlayer(customer)}
-                  >
-                    Add Player
-                  </button>
-                </div>
-              );
-            }
-          })}
-        </div>
+      </div>
+      <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+      {!props.finish && (
+        <button
+          disabled={players.length === 1 || players.length > 4}
+          onClick={props.setFinish(players)}
+          style={{
+            cursor: players.length === 1 || players.length > 4 ? 'not-allowed' : 'pointer',
+            height: '30px', 
+            right: "-3px",
+            top: "-27px",
+            width: "100px"
+          }}
+        >
+          Finish
+        </button>
+      )}
       </div>
       <div
         style={{
@@ -159,7 +94,7 @@ const TryingToBookHelper = props => {
           Players Added
         </p>
         <div id={styles.playerWrapDiv}>
-          {addedPlayers.map(addedPlayer => {
+          {players.map(addedPlayer => {
             return (
               <p
                 style={{
@@ -167,7 +102,7 @@ const TryingToBookHelper = props => {
                   marginTop: "6px"
                 }}
               >
-                {addedPlayer.name}
+                {addedPlayer}
               </p>
             );
           })}

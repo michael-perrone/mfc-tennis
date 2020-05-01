@@ -9,7 +9,7 @@ const BookingSchema = new mongoose.Schema({
   minutes: String,
   businessName: String,
   date: String,
-  otherNames: [String]
+  players: [String]
 });
 
 const Booking = mongoose.model("booking", BookingSchema);

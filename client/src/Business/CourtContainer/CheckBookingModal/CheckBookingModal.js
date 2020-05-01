@@ -68,6 +68,8 @@ class CheckBookingModal extends React.Component {
     this.setState({ showAddHelper: true });
   }
 
+// user
+
   savePlayers() {
     this.setState({ playersChanged: false });
     let newPlayers = [];
@@ -92,37 +94,15 @@ class CheckBookingModal extends React.Component {
   }
 
   componentDidMount() {
-    if (
-      this.props.objectToModal &&
-      this.props.objectToModal.players &&
-      this.props.objectToModal.players.length > 0
-    ) {
-      console.log("hi");
-      Axios.post("/api/getPlayers", {
-        bookingId: this.props.objectToModal._id
-      }).then(response => {
-        this.setState({ players: response.data.players });
-        if (this.props.user) {
-          for (let i = 0; i < response.data.players.length; i++) {
-            if (this.props.user.user.id == response.data.players[i].id) {
-              this.setState({ canView: true });
-              return;
-            }
-          }
-        }
-      });
-    }
-    if (this.props.objectToModal) {
-      Axios.post("/api/rebooked", {
-        currentlyBookedBy: this.props.objectToModal.bookedBy,
-        bookingId: this.props.objectToModal
-      }).then(response => {
-        if (response.data.rebooked === true) {
-          this.setState({ rebooker: response.data.bookedBy });
-        }
-      });
-    }
+    Axios.post('/api/thingBooked/getPlayers', {id: this.props.objectToModal._id}).then(
+      response => {
+        this.setState({players: response.data.players})
+      }
+    )
   }
+
+  // Join Clinic
+
 
   removePlayers(id) {
     return () => {
@@ -154,11 +134,7 @@ class CheckBookingModal extends React.Component {
             backgroundColor: "rgba(0,0,0,0.85)"
           }}
         ></div>
-        {(this.props.instructor !== null ||
-          this.props.admin !== null ||
-          (this.props.user &&
-            this.props.objectToModal.bookingType === "Open Clinic") ||
-          this.state.canView) && (
+        {this.props.user.user.admin && (
           <div style={{ left: "35%" }} className={otherstyles.bookingModal}>
             <button
               style={{
@@ -171,7 +147,8 @@ class CheckBookingModal extends React.Component {
                 top: "0",
                 right: "0",
                 zIndex: "1000",
-                width: "22px"
+                width: "30px",
+                height: '30px'
               }}
               onClick={this.props.cancel}
             >
@@ -212,18 +189,10 @@ class CheckBookingModal extends React.Component {
               <p style={{ padding: "5px" }}>
                 Booking ends: {this.props.objectToModal.timeEnd}
               </p>
-              <p style={{ padding: "5px" }}>
-                Service: {this.props.objectToModal.serviceName}
-              </p>
-              {this.props.objectToModal.instructorName !== "None" && (
-                <p style={{ padding: "5px" }}>
-                  Employee: {this.props.objectToModal.employeeName}
-                </p>
-              )}
             </div>
             {this.state.players &&
               this.state.players.length > 0 &&
-              !this.props.user && (
+              this.props.user.user.admin && (
                 <React.Fragment>
                   <p style={{ textDecoration: "underline", marginTop: "16px" }}>
                     Players
@@ -258,7 +227,7 @@ class CheckBookingModal extends React.Component {
                                     : "14px"
                               }}
                             >
-                              {player.name}{" "}
+                              {player}{" "}
                             </p>
                             {this.state.editing &&
                               this.state.players.length > 0 && (
@@ -278,17 +247,6 @@ class CheckBookingModal extends React.Component {
                       })}
                   </div>
                 </React.Fragment>
-              )}
-            {this.props.user &&
-              !this.state.canView &&
-              !this.state.clinicJoined && (
-                <button
-                  style={{ marginTop: "20px" }}
-                  className={styles.editCancel}
-                  onClick={this.joinClinic}
-                >
-                  Join Clinic
-                </button>
               )}
 
             {this.state.canView &&
@@ -369,7 +327,7 @@ class CheckBookingModal extends React.Component {
                 </div>
               </div>
             )}
-            {(this.props.admin ||
+            {(this.props.user.user.admin ||
               (this.props.instructor &&
                 this.props.instructor.instructor.instructorName ===
                   this.props.objectToModal.bookedBy) ||
@@ -387,13 +345,6 @@ class CheckBookingModal extends React.Component {
                     class="far fa-trash-alt"
                   ></i>
                   Delete
-                </button>
-                <button className={styles.editCancel} onClick={this.setEditing}>
-                  <i
-                    style={{ position: "relative", left: "-5px" }}
-                    class="far fa-edit"
-                  ></i>
-                  Edit
                 </button>
               </div>
             )}
@@ -434,28 +385,13 @@ class CheckBookingModal extends React.Component {
                 </button>
               </div>
             )}
-            {this.props.instructor &&
-              this.props.instructor.instructor.instructorName !==
-                this.props.objectToModal.bookedBy &&
-              !this.state.rebooking && (
-                <button
-                  style={{ marginTop: "20px" }}
-                  className={styles.editCancel}
-                  onClick={this.rebookingHandler}
-                >
-                  Rebook
-                </button>
-              )}
           </div>
         )}
-        {this.props.user &&
-          this.props.objectToModal.bookingType !== "Open Clinic" &&
-          !this.state.canView && (
+        {!this.props.user.user.admin &&
+      (
             <div style={{ left: "35%" }} className={otherstyles.bookingModal}>
               <p style={{ padding: "20px" }}>
-                We're sorry, we do not allow users to view bookings at tennis
-                clubs unless the user is in the booking or if it is an Open
-                Clinic.
+                You can only view the bookings that you have scheduled.
               </p>
             </div>
           )}

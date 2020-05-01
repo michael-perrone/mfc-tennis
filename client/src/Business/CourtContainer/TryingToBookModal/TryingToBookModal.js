@@ -24,6 +24,7 @@ class TryingToBookModal extends React.Component {
 
   setFinish = players => () => {
     this.setState({ finish: true });
+    console.log(players)
     this.props.setPlayersComingBack(players);
   };
 
@@ -140,6 +141,7 @@ class TryingToBookModal extends React.Component {
         </div>
       </React.Fragment>
     );
+    // setPlayers
   }
 }
 

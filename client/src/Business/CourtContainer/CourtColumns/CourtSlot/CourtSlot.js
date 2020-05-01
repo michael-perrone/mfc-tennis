@@ -157,7 +157,7 @@ class CourtSlot extends React.Component {
               }}
               id={styles.bookedCheckButton}
             >
-              {this.props.bookingInfo.serviceName}
+              Booked
             </button>
           </div>
         )}
@@ -175,7 +175,7 @@ class CourtSlot extends React.Component {
               }}
               id={styles.bookedCheckButton}
             >
-              {this.props.bookingInfo.serviceName}
+              Booked
             </button>
           </div>
         )}
@@ -195,7 +195,7 @@ class CourtSlot extends React.Component {
               }}
               id={styles.bookedCheckButton}
             >
-              {this.props.bookingInfo.serviceName}
+              Booked
             </button>
           </div>
         )}

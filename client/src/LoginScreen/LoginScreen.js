@@ -84,7 +84,9 @@ class LoginScreen extends React.Component {
     return (
       <div className={styles.backGreen}>
         <p id={styles.mfcTennisHeader}>MFC Tennis Schedule</p>
-        <div id={styles.loginReg}>
+        <div style={{position: 'relative'}} id={styles.loginReg}>
+          <div style={{position: 'absolute', height:'3px',
+          left: this.state.logOrReg === "register" ? '94px' : '15px', top: '28px', width: this.state.logOrReg === "register" ? '70px' : "53px", backgroundColor: 'white', zIndex: '100'}}></div>
           <p onClick={this.setLogin} style={{backgroundColor: this.state.logOrReg === 'register' ? 'lightgray' : "", border: this.state.logOrReg === 'register' ? 'none' : "",}} className={styles.tabs}>Login</p>
           <p onClick={this.setRegister} style={{backgroundColor: this.state.logOrReg === 'login' ? 'lightgray' : "", border: this.state.logOrReg === 'login' ? 'none' : "",}} className={styles.tabs}>Register</p>
         </div>
@@ -99,7 +101,7 @@ class LoginScreen extends React.Component {
           </div>}
 
           {this.state.logOrReg === "login" && <div id={styles.loggy}>
-            <input onChange={this.setUserNameLogin} className={styles.innys} placeholder="Full Name"/>
+            <input onChange={this.setUserNameLogin} className={styles.innys} placeholder="User Name"/>
             <input onChange={this.setPasswordLogin} type="password" className={styles.innys} placeholder="Password"/> 
             <Button onClick={this.login}>Login</Button>
           </div>}

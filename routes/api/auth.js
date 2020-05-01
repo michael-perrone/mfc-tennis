@@ -21,7 +21,7 @@ router.post("/login", async (req, res) => {
       const payload = {
         user: {
           admin: userLoggingIn.admin,
-          userName: `${userLoggingIn.firstName} ${userLoggingIn.lastName}`,
+          fullName: userLoggingIn.fullName,
           id: userLoggingIn.id
         }
       };

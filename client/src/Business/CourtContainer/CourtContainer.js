@@ -101,6 +101,8 @@ class CourtContainer extends React.Component {
         });
     };
   }
+
+
   thingClicked() {
     this.setState({employeeChosenError: false})
     if (this.props.timeChosen.timeSelected) { 
@@ -113,6 +115,8 @@ class CourtContainer extends React.Component {
         }  
      //dwd
   }
+
+
   showBookingModal = objectToModal => () => {
     this.setState({ objectToModal, showBookingModalState: true });
   };
@@ -186,14 +190,11 @@ class CourtContainer extends React.Component {
   };
 
   setPlayersComingBack = players => {
-    if (this.props.user) {
-      let playerAlreadyHereArray = [
-        { name: this.props.user.user.userName, id: this.props.user.user.id },
-        ...players
-      ];
-      this.setState({ playersComingBack: playerAlreadyHereArray });
-    }
     this.setState({ playersComingBack: players });
+    let newBookingObect = {...this.state.bookingToSend};
+    newBookingObect.players = players;
+    this.setState({bookingToSend: newBookingObect})
+    console.log(newBookingObect)
   };
 
   bookThingArray = () => {
@@ -205,48 +206,7 @@ class CourtContainer extends React.Component {
         })
         .then(firstResponse => {
           if (firstResponse.status === 200) {
-            if (this.props.employeeChosen) {
-              const objectToSend = {
-                employeeId: this.props.employeeChosen.employeeChosen._id,
-                newBooking: firstResponse.data.newBooking._id
-              };
-              axios
-                .post("/api/employeeBookings", objectToSend)
-                .then(secondResponse => {
-                  if (secondResponse.status === 200 && this.props.user) {
-                    axios.post("/api/notifications/userBookedEmployee", {
-                      employeeId: this.props.employeeChosen.employeeChosen
-                        ._id,
-                      userId: this.props.user.user.id,
-                      bookingId: firstResponse.data.newBooking._id
-                    });
-                  }
-                  if (
-                    secondResponse.status === 200 &&
-                    this.props.employee &&
-                    firstResponse.data.newBooking.customers.length > 0
-                  ) {
-                    axios.post("/api/notifications/employeeBookedCustomer", {
-                      users: firstResponse.data.newBooking.customers,
-                      employeeId: this.props.employeeChosen.employeeChosen
-                        ._id,
-                      bookingId: firstResponse.data.newBooking._id
-                    });
-                  }
-                  else if (secondResponse.status === 200 && this.props.admin && 
-                    firstResponse.data.newBooking.customers.length > 0) {
-                      axios.post('/api/notifications/businessBookedCustomer', {
-                        employeeId: this.props.employeeChosen.employeeChosen._id,
-                        users: firstResponse.data.newBooking.customers,
-                        businessId: this.props.admin.admin.businessId,
-                        bookingId: firstResponse.data.newBooking._id
-                      })
-                    }
-                })
-                .catch(error => {
-                  console.log(error);
-                });
-            }
+            console.log('dwd')
           }
           let clubsMatchArray = [];
           firstResponse.data.bookings.forEach(element => {
@@ -297,6 +257,9 @@ class CourtContainer extends React.Component {
   // if (new Date(this.props.dateChosen, this.state.firstSlotInArray.timeStart) < new Date()) {
     if (new Date(`${this.props.dateChosen}, ${this.state.firstSlotInArray.thing.timeStart}`) < new Date()) {
         setTimeout(() => this.setState({datePassed: true}), 400)
+        this.setState({ tryingToBookModalState: false });
+        this.setState({ slotsClicked: false });
+        this.setState({ bookingArray: [] });
     }
     else {
     this.setState({ doubleBookError: false });
@@ -308,8 +271,7 @@ class CourtContainer extends React.Component {
         let realId = thingIdArray.join("");
         thingIds.push(realId);
       });
-      console.log(thingIds)
-                       
+      console.log(thingIds)           
             let nameForBooking = "";
             let employeeName;
             let employeeId;
@@ -326,12 +288,8 @@ class CourtContainer extends React.Component {
               let thingNumberComing = thingIdsArray[0].toString();
               let thingNumberString = thingNumberComing.split("");
               let thingNumber = parseInt(thingNumberString[0]);
-              const bookingToSend = {
-                businessId: this.props.businessId,
-                bookingType: this.props.bookingType.bookingType,
-                employeeName,
-                employeeId,
-                bookedBy: nameForBooking,
+              const bookingToSend = { 
+                bookedBy: this.props.user.user.fullName,
                 timeStart: this.state.firstSlotInArray.thing.timeStart,
                 timeEnd: this.state.lastSlotInArray.thing.timeEnd,
                 thingIds: thingIdsArray,
@@ -339,7 +297,8 @@ class CourtContainer extends React.Component {
                 clubName: this.props.clubName,
                 date: this.props.dateChosen,
                 thingNumber,
-                businessName: this.props.businessName
+                businessName: this.props.businessName,
+                players: []
               };
               this.setState({ bookingToSend });
               this.setState(prevState => {
@@ -347,9 +306,7 @@ class CourtContainer extends React.Component {
                   tryingToBookModalState: !prevState.tryingToBookModalState
                 };
               });
-            }
-          
-        
+            } 
     }
   };
 

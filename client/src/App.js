@@ -27,28 +27,26 @@ class App extends React.Component {
     return (
       <React.Fragment>
       <Switch>
-       
-        
-        <Route
-          path="/schedule"
-          exact
-          component={Business}
-        />
-        <Route
+      <Route
         path="/"
         exact
         component={LoginScreen}
         />
-        {token.user && (
+      {!token.user && (
           <Redirect
             from="*"
             to={
-              localStorage.getItem("token") !== null
+              localStorage.getItem("token")
                 ? `/schedule`
                 : `/`
             }
           />
-        )}
+          )}
+          <Route
+          path="/schedule"
+          exact
+          component={ Business}
+        />
       </Switch>
       </React.Fragment>
     );
