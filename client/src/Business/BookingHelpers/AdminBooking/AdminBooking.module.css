@@ -1,0 +1,84 @@
+.bookingHolderContainer {
+  height: 240px;
+  width: 240px;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  position: relative;
+}
+
+#coverUser {
+  height: 100%;
+  width: 100%;
+  cursor: not-allowed;
+  background: rgba(0, 0, 0, 0.751);
+  position: absolute;
+  z-index: 299;
+}
+
+#coolContainer {
+  padding: 18px;
+  box-shadow: 0px 0px 4px black;
+  border-bottom: 1px solid gray;
+  background-color: lavender;
+  position: relative;
+}
+
+#divWhereWidthChanges {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background-color: lavender;
+}
+
+#bookingHolder {
+  width: 100%;
+}
+
+.bookingHolderSubContainer {
+  position: relative;
+  top: 12px;
+  height: 120px;
+  width: 210px;
+  border: 1px solid black;
+  overflow: auto;
+}
+
+.itemPTag {
+  padding: 1px 0px 1px 10px;
+  cursor: pointer;
+}
+
+.itemPTag:hover {
+  background-color: rgb(157, 217, 255);
+}
+
+@media (min-width: 1200px) {
+  #coolContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  #bookingHolder {
+    width: 100%;
+  }
+  #divWhereWidthChanges {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 667px) {
+  #divWhereWidthChanges {
+    flex-direction: column;
+    align-items: center;
+  }
+  #coolContainer {
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
