@@ -48,7 +48,7 @@ export default function(state = initalState, action) {
         employee: decoder(localStorage.getItem("employeeToken"))
       };
     case USER_LOGIN_SUCCESS:
-      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("token", action.payload);
       return {
         ...state,
         isAuthenticated: true,
@@ -73,7 +73,7 @@ export default function(state = initalState, action) {
         employee: decoder(localStorage.getItem("employeeToken"))
       };
     case USER_REGISTER_SUCCESS:
-      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("token", action.payload);
       return {
         ...state,
         isAuthenticated: true,

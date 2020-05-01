@@ -43,6 +43,8 @@
 
 .cancelConfirm {
   height: 30px;
+  font-size: 16px;
+  cursor: pointer;
   width: 90px;
   border: none;
   box-shadow: 0px 0px 2px black;

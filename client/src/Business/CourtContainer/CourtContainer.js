@@ -7,7 +7,6 @@ import TryingToBookModal from "./TryingToBookModal/TryingToBookModal";
 
 import { connect } from "react-redux";
 import OtherAlert from "../../OtherAlerts/OtherAlerts";
-import { HOVER_NUMBER } from "../../actions/actions";
 import BookingButtons from "./BookingButtons/BookingButtons";
 
 // BookingIntro
@@ -59,6 +58,8 @@ class CourtContainer extends React.Component {
       .then(response => {
         this.setState({ bookedThings: response.data.bookings });
       });
+      let container = document.getElementById(styles.courtContainerParent)
+      container.scrollLeft = 500;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -76,9 +77,7 @@ class CourtContainer extends React.Component {
         });
     }
   }
-
-
-
+  
   setShowDeleteSuccess() {
     this.setState({ showDeleteSuccess: false });
     setTimeout(() => this.setState({ showDeleteSuccess: true }), 200);
@@ -301,8 +300,7 @@ class CourtContainer extends React.Component {
     }
     else {
     this.setState({ doubleBookError: false });
-    let blockBooking;
-    if (this.props.employeeChosen) {
+   
       let thingIds = [];
       this.state.bookingArray.forEach(element => {
         let thingIdArray = element.thingId.toString().split("");
@@ -311,38 +309,11 @@ class CourtContainer extends React.Component {
         thingIds.push(realId);
       });
       console.log(thingIds)
-      axios
-        .post("/api/checkEmployeeAvailability", {
-          employeeId: this.props.employeeChosen.employeeChosen._id,
-          thingIds,
-          date: this.props.dateChosen
-        })
-        .then(response => {
-          if (response.data.bookingNotOkay === true) {
-            setTimeout(() => this.setState({ doubleBookError: true }), 200);
-            this.setState({slotsClicked: false})
-            blockBooking = true;
-            return;
-          }
-          if (!this.props.bookingType) {
-            this.setState({chooseServiceError: false})
-            setTimeout(() => this.setState({chooseServiceError: true}), 200)
-            this.setState({slotsClicked: false})
-            return;
-          }
-
-          if (!blockBooking && this.props.bookingType) {
                        
             let nameForBooking = "";
             let employeeName;
             let employeeId;
-            if (this.props.admin) {
-              nameForBooking = this.props.admin.admin.name;
-            } else if (this.props.instructor) {
-              nameForBooking = this.props.instructor.instructor.instructorName;
-            } else if (this.props.user) {
               nameForBooking = this.props.user.user.userName;
-            }
             if (this.props.employeeChosen) {
               employeeName = this.props.employeeChosen.employeeChosen.fullName;
               employeeId = this.props.employeeChosen.employeeChosen._id;
@@ -377,9 +348,8 @@ class CourtContainer extends React.Component {
                 };
               });
             }
-          }
-        });
-      }
+          
+        
     }
   };
 

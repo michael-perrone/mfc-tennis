@@ -2,6 +2,8 @@ import React from "react";
 import styles from "./LoginScreen.module.css";
 import Button from '../Shared/Button/Button';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import { USER_LOGIN_SUCCESS, USER_REGISTER_SUCCESS } from "../actions/actions";
 
 
 
@@ -29,7 +31,7 @@ class LoginScreen extends React.Component {
     axios.post('api/auth/login', {userName: this.state.userNameLogin, password: this.state.passwordLogin}).then(
       response => {
         if (response.data.token) {
-          localStorage.setItem('token', response.data.token);
+          this.props.userLogin(response.data.token)
           this.props.history.push("/schedule") 
         }
       }
@@ -43,7 +45,7 @@ class LoginScreen extends React.Component {
     axios.post('api/usersSignup', {userName: this.state.userNameReg, password: this.state.passwordReg, fullName: this.state.fullName}).then(
       response => {
         if (response.data.token) {
-          localStorage.setItem("token", response.data.token);
+          this.props.userRegister(response.data.token)
           this.props.history.push('/schedule')
         }
       }
@@ -107,4 +109,11 @@ class LoginScreen extends React.Component {
   }
 }
 
-export default LoginScreen;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    userRegister: (token) => dispatch({type: USER_REGISTER_SUCCESS, payload: token}), 
+    userLogin: (token) => dispatch({type: USER_LOGIN_SUCCESS, payload: token}) 
+  }
+}
+
+export default connect(null,mapDispatchToProps)(LoginScreen);

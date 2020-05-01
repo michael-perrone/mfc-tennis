@@ -40,12 +40,12 @@ router.post("/", async (req, res) => {
         id: newUser.id,
         fullName: req.body.userName 
       }
-      
+
     };
     jwt.sign(
       payload,
       config.get("userSecret"),
-      { expiresIn: 360000000000 },
+      { expiresIn: 360000000000000000000000000000000000000000000 },
       (error, token) => {
         if (error) {
           throw error;

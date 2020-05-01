@@ -29,7 +29,7 @@ router.post("/login", async (req, res) => {
       jwt.sign(
         payload,
         config.get("userSecret"),
-        { expiresIn: 3600000000000000000000000000 },
+        { expiresIn: 36000000000000000000000000000000000000000000000 },
         (error, token) => {
           if (error) {
             throw error;

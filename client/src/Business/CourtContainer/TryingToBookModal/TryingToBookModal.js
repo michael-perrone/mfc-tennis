@@ -68,19 +68,13 @@ class TryingToBookModal extends React.Component {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
-                    height: "320px"
+                    height: "120px"
                   }}
                 >
                   <p>Booked By: {this.props.booking.bookedBy} </p>
                   <p>Start Time: {this.props.booking.timeStart}</p>
                   <p>End Time: {this.props.booking.timeEnd}</p>
-                  {this.props.booking.instructorName !== "None" && (
-                    <p>Employee Name: {this.props.booking.employeeName}</p>
-                  )}
-                  <p>Service: {this.props.booking.bookingType.serviceName}</p>
-                  <p>Price: ${this.props.booking.bookingType.cost}</p>
                   <p>Time Amount: {howLong}</p>
-                  <p>{this.props.bookingColumnType} Number: {this.props.booking.thingNumber}</p>
                 </div>
                 <div
                   style={{

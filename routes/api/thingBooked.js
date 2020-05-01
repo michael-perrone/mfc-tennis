@@ -6,36 +6,18 @@ const User = require("../../models/User");
 router.post("/", async (req, res) => {
   try {
     let newThingBooked = new Booking({
-      serviceType: req.body.booking.bookingType._id,
-      cost: req.body.booking.bookingType.cost,
-      serviceName: req.body.booking.bookingType.serviceName,
-      employeeBooked: req.body.booking.employeeId,
-      employeeName: req.body.booking.employeeName,
       bookedBy: req.body.booking.bookedBy,
-      businessId: req.body.booking.businessId,
       thingIds: req.body.booking.thingIds,
       timeStart: req.body.booking.timeStart,
       timeEnd: req.body.booking.timeEnd,
       minutes: req.body.booking.minutes,
-      date: req.body.booking.date,
-      customers: req.body.customers,
-      businessName: req.body.booking.businessName
+      date: req.body.booking.date
     });
     console.log(newThingBooked)
-    if (req.body.customers && req.body.customers.length > 0) {
-      const customers = await User.find({ _id: newCourtBooked.players });
-      for (let i = 0; i < customers.length; i++) {
-        let previousCustomersBookings = [...customers[i].bookings];
-        previousCustomersBookings.push(newCourtBooked._id);
-        customers[i].bookings = previousCustomersBookings;
-        customers[i].save();
-      }
-    }
     await newThingBooked.save();
 
     if (newThingBooked) {
       const bookings = await Booking.find({
-        businessId: req.body.booking.businessId,
         date: req.body.date
       });
       console.log(bookings)

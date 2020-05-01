@@ -59,9 +59,4 @@
   font-size: 24px;
 }
 
-@media (min-width: 1000px) {
-  #courtContainerParent {
-  display: flex;
-  justify-content: center;
-  }
-}
+
