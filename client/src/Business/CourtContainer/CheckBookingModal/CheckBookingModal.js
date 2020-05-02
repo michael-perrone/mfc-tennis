@@ -131,11 +131,21 @@ class CheckBookingModal extends React.Component {
             height: "100vh",
             width: "100%",
             zIndex: "498",
+            display: 'flex',
+            justifyContent: 'center',
             backgroundColor: "rgba(0,0,0,0.85)"
           }}
         ></div>
-        {this.props.user.user.admin && (
-          <div style={{ left: "35%" }} className={otherstyles.bookingModal}>
+        <div style={{position: "fixed",
+            left: 0,
+            top: 0,
+            height: "100vh",
+            width: "100%",
+            zIndex: "498",
+            display: 'flex',
+            justifyContent: 'center'}}>
+        {(this.props.user.user.admin || this.props.user.user.fullName === this.props.objectToModal.bookedBy) && (
+          <div style={{zIndex: "503"}} className={otherstyles.bookingModal}>
             <button
               style={{
                 boxShadow: "0px 0px 2px black",
@@ -192,7 +202,7 @@ class CheckBookingModal extends React.Component {
             </div>
             {this.state.players &&
               this.state.players.length > 0 &&
-              this.props.user.user.admin && (
+              (this.props.user.user.admin || this.props.objectToModal.bookedBy === this.props.user.user.fullName) && (
                 <React.Fragment>
                   <p style={{ textDecoration: "underline", marginTop: "16px" }}>
                     Players
@@ -328,10 +338,7 @@ class CheckBookingModal extends React.Component {
               </div>
             )}
             {(this.props.user.user.admin ||
-              (this.props.instructor &&
-                this.props.instructor.instructor.instructorName ===
-                  this.props.objectToModal.bookedBy) ||
-              this.state.rebooking) && (
+              this.props.objectToModal.bookedBy === this.props.user.user.fullName) && (
               <div style={{ display: "flex", marginTop: "24px" }}>
                 <button
                   onClick={this.showConfirmDelete}
@@ -387,14 +394,33 @@ class CheckBookingModal extends React.Component {
             )}
           </div>
         )}
-        {!this.props.user.user.admin &&
+        {!this.props.user.user.admin && this.props.user.user.fullName !== this.props.objectToModal.bookedBy &&
       (
             <div style={{ left: "35%" }} className={otherstyles.bookingModal}>
+                 <button
+              style={{
+                boxShadow: "0px 0px 2px black",
+                position: "absolute",
+                borderLeft: "1px solid black",
+                borderBottom: "1px solid black",
+                borderRight: "none",
+                borderTop: "none",
+                top: "0",
+                right: "0",
+                zIndex: "1000",
+                width: "30px",
+                height: '30px'
+              }}
+              onClick={this.props.cancel}
+            >
+              X
+            </button>
               <p style={{ padding: "20px" }}>
                 You can only view the bookings that you have scheduled.
               </p>
             </div>
           )}
+          </div>
       </React.Fragment>
     );
   }

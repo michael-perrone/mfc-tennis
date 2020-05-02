@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
       user: {
         admin: false,
         id: newUser.id,
-        fullName: req.body.userName 
+        fullName: req.body.fullName 
       }
 
     };
